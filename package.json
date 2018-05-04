@@ -1,0 +1,27 @@
+{
+  "name": "exbookapi",
+  "version": "1.0.0",
+  "description": "API para aplicación de notas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HowToProcrastinate/ExBookAPI.git"
+  },
+  "keywords": [
+    "ExBook",
+    "API",
+    "Notas"
+  ],
+  "author": "Esteban D. Barboza Primera <dario0117@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HowToProcrastinate/ExBookAPI/issues"
+  },
+  "homepage": "https://github.com/HowToProcrastinate/ExBookAPI#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
