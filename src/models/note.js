@@ -16,16 +16,16 @@ notes.push({
     'body': 'Content'
 });
 
-module.exports = /** @class */ class Note{
+module.exports = /** @class */ class Note {
     
     /**
      * @returns {Array<String>} Listado de Notas
      */
-    static list(){
+    static list() {
         return notes;
     }
 
-    static get(id){
+    static get(id) {
         return (id > notes.length) ? -1 : notes[id];
     }
 };
