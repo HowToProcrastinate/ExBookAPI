@@ -22,12 +22,18 @@ function getAll(res, collection) {
 }
 
 function get(res, collection, id) {
-    let finder = { 
-        '_id': new ObjectId(id) 
-    };
-    db.collection(collection).findOne(finder,function(err, r) {
+    let finder = {};
+    try {
+        finder = { 
+            '_id': new ObjectId(id) 
+        };
+    } catch (error) {
+        res.sendStatus(404);
+        return;
+    }
+    db.collection(collection).findOne(finder, function(err, r) {
         if (err) {
-            throw err;
+            res.sendStatus(404);
         }else{
             res.send(r);
         }
