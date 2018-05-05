@@ -7,6 +7,8 @@
     "node": "8.11.1"
   },
   "scripts": {
+    "run": "node src/index.js",
+    "nodemon": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,9 +28,11 @@
   "homepage": "https://github.com/HowToProcrastinate/ExBookAPI#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "mongodb": "^3.0.7"
   },
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "eslint": "^4.19.1",
+    "nodemon": "^1.17.3"
   }
 }
