@@ -1,43 +1,51 @@
 require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
+
+var db = null;
 
 MongoClient.connect(process.env.MONGODB_URI, (err, client) => {
     if(err) {
         throw err;
     }
-    // const db = client.db(process.env.MONGODB_DB_NAME);
+    db = client.db(process.env.MONGODB_DB_NAME);
 });
 
-function getAll(schema) {
-    let notes = [];
-    notes.push({
-        'title': 'Note 1',
-        'body': 'Content'
+function getAll(res, collection) {
+    db.collection(collection).find().toArray(function(err, r) {
+        if (err) {
+            throw err;
+        }else{
+            res.send(r);
+        }
     });
-    notes.push({
-        'title': 'Note 2',
-        'body': 'Content'
-    });
-    notes.push({
-        'title': 'Note 3',
-        'body': 'Content'
-    });
-    notes.push({
-        'title': 'Note 4',
-        'body': 'Content'
-    });
-    notes.push({
-        'title': 'Note 5',
-        'body': 'Content'
-    });
-    return notes;
 }
 
-function get(schema, id) {
-    return (id >= getAll().length) ? -1 : getAll()[id];
+function get(res, collection, id) {
+    let finder = { 
+        '_id': new ObjectId(id) 
+    };
+    db.collection(collection).findOne(finder,function(err, r) {
+        if (err) {
+            throw err;
+        }else{
+            res.send(r);
+        }
+    });
+}
+
+function add(res, collection, data) {
+    db.collection(collection).save(data, function(err, r) {
+        if (err) {
+            throw err;
+        }else{
+            res.send(r);
+        }
+    });
 }
 
 module.exports = {
     getAll,
-    get
-}
+    get,
+    add
+};

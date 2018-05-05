@@ -2,20 +2,15 @@ const router = require('express').Router();
 const Note = require('../models/note');
 
 router.get('/', function (req, res) {
-    res.send(Note.list());
+    Note.list(res);
 });
 
 router.get('/:id', function (req, res) {
-    let note = Note.get(req.params.id);
-    if(note === -1) {
-        res.sendStatus(404);
-    }else{
-        res.send(note);
-    }
+    Note.get(res, req.params.id);
 });
 
 router.post('/', function (req, res) {
-    res.send('Nota agregada satisfactoriamente');
+    Note.add(res, req.body);
 });
 
 module.exports = router;

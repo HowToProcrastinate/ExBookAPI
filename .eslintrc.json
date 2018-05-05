@@ -10,10 +10,7 @@
     "rules": {
         "indent": [
             "error",
-            4,
-            {
-                "indentSwitchCase": true
-            }
+            4
         ],
         "linebreak-style": [
             "error",

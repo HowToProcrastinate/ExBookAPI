@@ -1,17 +1,16 @@
 const db = require('../storage/db');
 
 module.exports = /** @class */ class Note {
-    
-    /**
-     * @returns {Array<String>} Listado de Notas
-     */
-    static list() {
-        let notes = db.getAll('notes');
-        return notes;
+
+    static list(res) {
+        db.getAll(res,'notes');
     }
 
-    static get(id) {
-        let note = db.get('notes', id);
-        return note;
+    static get(res, id) {
+        db.get(res, 'notes', id);
+    }
+
+    static add(res, { title = 'Empty title', body = 'Empty' }) {
+        db.add(res, 'notes', { title, body });
     }
 };
