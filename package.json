@@ -1,6 +1,6 @@
 {
   "name": "exbookapi",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "API para aplicación de notas",
   "main": "index.js",
   "engines": {
