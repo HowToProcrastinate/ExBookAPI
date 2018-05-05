@@ -1,31 +1,16 @@
-let notes = [];
-notes.push({
-    'title': 'Note 1',
-    'body': 'Content'
-});
-notes.push({
-    'title': 'Note 2',
-    'body': 'Content'
-});
-notes.push({
-    'title': 'Note 3',
-    'body': 'Content'
-});
-notes.push({
-    'title': 'Note 4',
-    'body': 'Content'
-});
+const db = require('../storage/db');
 
-module.exports = /** @class */ class Note{
-    
-    /**
-     * @returns {Array<String>} Listado de Notas
-     */
-    static list(){
-        return notes;
+module.exports = /** @class */ class Note {
+
+    static list(res) {
+        db.getAll(res,'notes');
     }
 
-    static get(id){
-        return (id > notes.length) ? -1 : notes[id];
+    static get(res, id) {
+        db.get(res, 'notes', id);
+    }
+
+    static add(res, { title = 'Empty title', body = 'Empty' }) {
+        db.add(res, 'notes', { title, body });
     }
 };
