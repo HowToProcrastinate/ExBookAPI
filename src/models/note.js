@@ -13,4 +13,15 @@ module.exports = /** @class */ class Note {
     static add(res, { title = 'Empty title', body = 'Empty' }) {
         db.add(res, 'notes', { title, body });
     }
+
+    static patch(res, id, { title = '', body = '' }) {
+        let params = { id };
+        if(title !== '') {
+            params.title = title;
+        }
+        if(body !== '') {
+            params.body = body;
+        }
+        db.edit(res, 'notes', params);
+    }
 };

@@ -50,8 +50,29 @@ function add(res, collection, data) {
     });
 }
 
+function edit(res, collection, data) {
+    try {
+        data._id =  new ObjectId(data.id);
+        delete data.id;
+    } catch (error) {
+        res.sendStatus(404);
+        return;
+    }
+    db.collection(collection).updateOne(
+        { _id: data._id }, 
+        { $set: Object.assign({}, data) }, 
+        function (err, r) {
+            if (err) {
+                res.send('No pudo ser actualizado el elemento');
+            }else{
+                res.send(r);
+            }
+        });
+}
+
 module.exports = {
     getAll,
     get,
-    add
+    add,
+    edit
 };
