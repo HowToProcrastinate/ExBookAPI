@@ -45,7 +45,7 @@ function add(res, collection, data) {
         if (err) {
             throw err;
         }else{
-            res.send(r);
+            res.status(201).send(r);
         }
     });
 }
@@ -70,9 +70,15 @@ function edit(res, collection, data) {
         });
 }
 
+function remove(res, collection, conditions) {
+    db.collection(collection).remove(conditions);
+    res.status(200).send('ok');
+}
+
 module.exports = {
     getAll,
     get,
     add,
-    edit
+    edit,
+    remove
 };

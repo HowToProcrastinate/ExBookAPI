@@ -2,7 +2,7 @@ require('dotenv').config();
 function getDB() {
     var db = null;
     if (process.env.NODE_ENV === 'test') {
-        throw new Error('No hay DB habilitada para pruebas aún');
+        db = require('./fake-db');
     }else{
         switch (process.env.DB) {
         case 'mongodb':

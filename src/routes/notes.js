@@ -17,4 +17,8 @@ router.patch('/:id', function (req, res) {
     Note.patch(res, req.params.id, req.body);
 });
 
+router.delete('/:id', function (req, res) {
+    Note.remove(res, req.params.id);
+});
+
 module.exports = router;
