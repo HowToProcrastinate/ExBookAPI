@@ -9,7 +9,7 @@
   "scripts": {
     "run": "node src/index.js",
     "nodemon": "nodemon src/index.js",
-    "test": "./node_modules/.bin/mocha --reporter spec --recursive --exit"
+    "test": "./node_modules/.bin/mocha --timeout 999999 --delay --reporter spec --recursive --exit"
   },
   "repository": {
     "type": "git",

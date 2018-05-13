@@ -3,25 +3,31 @@ let entity = 'notes';
 
 module.exports = /** @class */ class Note {
 
-    static list(res) {
-        db.getAll(res, entity);
-    }
-
-    static get(res, id) {
-        let parsed_id = parseInt(id);
-        if (!Number.isInteger(parsed_id)) {
-            res.sendStatus(404);
-            return;
-        }
-        db.get(res, entity, parsed_id);
-    }
-
     static add(res, { title = '', body = '' }) {
         if (title === '' && body === '') {
             res.sendStatus(400);
             return;
         }
-        db.add(res, entity, { title, body });
+        let params = {};
+        if (title !== '') {
+            params.title = title;
+        }
+        if (body !== '') {
+            params.body = body;
+        }
+        db.add(res, entity, params);
+    }
+
+    static list(res) {
+        db.getAll(res, entity);
+    }
+
+    static get(res, id = '') {
+        if (id === '') {
+            res.sendStatus(400);
+            return;
+        }
+        db.get(res, entity, id);
     }
 
     static patch(res, id, { title = '', body = '' }) {
@@ -35,12 +41,11 @@ module.exports = /** @class */ class Note {
         db.edit(res, entity, params);
     }
 
-    static remove(res, id) {
-        let parsed_id = parseInt(id);
-        if (!Number.isInteger(parsed_id)) {
-            res.sendStatus(404);
+    static remove(res, id = '') {
+        if (id === '') {
+            res.sendStatus(400);
             return;
         }
-        db.remove(res, entity, parsed_id);
+        db.remove(res, entity, id);
     }
 };
