@@ -193,6 +193,37 @@ setTimeout(() => {
                     });
             });
         });
+        describe('MÉTODO: remove', () => {
+            let insertedNote = '';
+            before((done) => {
+                chai.request(app)
+                    .post('/notes')
+                    .send({
+                        'title': 'Título',
+                        'body': 'Cuerpo'
+                    })
+                    .end((err, res) => {
+                        insertedNote = res.body._id;
+                        done();
+                    });
+            });
+            it('Debería dar error al eliminar nota inexistente', (done) => {
+                chai.request(app)
+                    .delete('/notes/5aed2448db42172eb078bba3')
+                    .end((err, res) =>{
+                        res.should.have.status(404);
+                        done();
+                    });
+            });
+            it('Debería eliminar una nota por su `id`', (done) => {
+                chai.request(app)
+                    .delete(`/notes/${insertedNote}`)
+                    .end((err, res) =>{
+                        res.should.have.status(200);
+                        done();
+                    });
+            });
+        });
     });
     run();
 }, delay);

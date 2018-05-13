@@ -98,8 +98,19 @@ function remove(res, collection, id) {
         res.sendStatus(404);
         return;
     }
-    db.collection(collection).remove(_id);
-    res.status(200).send('ok');
+    db.collection(collection).remove(
+        _id,
+        function (err, r) {
+            if(err) {
+                throw err;
+            }else{
+                if(r.result.n === 0) {
+                    res.sendStatus(404);
+                }else{
+                    res.status(200).send('ok');
+                }
+            }
+        });
 }
 
 module.exports = {
