@@ -16,5 +16,9 @@ app.use(function(req, res, next) {
 });
 
 app.listen(PORT, function() {
-    console.log(`Express server started on ${PORT}`);
+    if (process.env.NODE_ENV !== 'test') {
+        console.log(`Express server started on ${PORT}`);
+    }
 });
+
+module.exports = app;

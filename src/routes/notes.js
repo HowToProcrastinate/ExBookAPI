@@ -1,16 +1,23 @@
 const router = require('express').Router();
 const Note = require('../models/note');
 
-router.get('/', function (req, res) {
-    Note.list(res);
-});
+router.route('/')
+    .post((req, res) => {
+        Note.add(res, req.body);
+    })
+    .get((req, res) => {
+        Note.list(res);
+    });
 
-router.get('/:id', function (req, res) {
-    Note.get(res, req.params.id);
-});
-
-router.post('/', function (req, res) {
-    Note.add(res, req.body);
-});
+router.route('/:id')
+    .get((req, res) => {
+        Note.get(res, req.params.id);
+    })
+    .patch((req, res) => {
+        Note.patch(res, req.params.id, req.body);
+    })
+    .delete((req, res) => {
+        Note.remove(res, req.params.id);
+    });
 
 module.exports = router;
