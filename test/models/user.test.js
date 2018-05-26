@@ -1,30 +1,35 @@
 const request = require('supertest');
 const faker = require('faker');
 const app = require('../../src/index');
+const User = require('../../src/models/users');
 
 faker.locale = 'es_MX';
 
 describe('Model: User', () => {
+    afterAll(done => {
+        User.remove({}, err => {
+            done();
+        });
+    });
     // Build
-    let email = faker.internet.email();
-    it('should regiter users', done => {
-        let user = {
-            name: faker.name.findName(),
-            email,
-            password: faker.internet.password()
-        }
+    let user_global = {
+        name: faker.name.findName(),
+        email: faker.internet.email(),
+        password: faker.internet.password()
+    }
+    it('should register users', done => {
         request(app)
             .post('/register')
-            .send(user)
+            .send(user_global)
             .end((err, res) => {
                 expect(res.status).toBe(201);
                 done();
             });
     });
-    it('shouldn\'t regiter user with duplicate email', done => {
+    it('shouldn\'t register user with duplicate email', done => {
         let user = {
             name: faker.name.findName(),
-            email,
+            email: user_global.email,
             password: faker.internet.password()
         }
         request(app)
@@ -75,6 +80,24 @@ describe('Model: User', () => {
                     done();
                 });
         });
+    });
+    // Test use cases
+    it('should retrieve all user information by email', done => {
+        let user_identnifier = {
+            email: user_global.email
+        }
+        request(app)
+            .get('/profile')
+            .send(user_identnifier)
+            .end((err, res) => {
+                let body = res.body;
+                console.log(body);
+                expect(res.status).toBe(200);
+                expect(body.name).toBe(user_global.name);
+                expect(body.email).toBe(user_global.email);
+                expect(body.password).toBe(user_global.password);
+                done();
+            });
     });
 });
 

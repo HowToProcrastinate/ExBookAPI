@@ -20,11 +20,10 @@ mongoConnect();
 
 function mongoConnect (){
     let MONGO_URI = process.env.MONGODB_URI;
-
     if (process.env.NODE_ENV === 'test'){
         MONGO_URI = process.env.MONGODB_URI_TEST;
     }
-    mongoose.connect(`${MONGO_URI}`);
+    mongoose.connect(MONGO_URI);
     var db = mongoose.connection;
     db.on('error', 
         console.error.bind(console, 'MongoDB connection error:')
