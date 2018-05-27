@@ -18,9 +18,9 @@ app.use(function(req, res, next) {
 
 mongoConnect();
 
-function mongoConnect (){
+function mongoConnect () {
     let MONGO_URI = process.env.MONGODB_URI;
-    if (process.env.NODE_ENV === 'test'){
+    if (process.env.NODE_ENV === 'test') {
         MONGO_URI = process.env.MONGODB_URI_TEST;
     }
     mongoose.connect(MONGO_URI);
@@ -31,7 +31,7 @@ function mongoConnect (){
     db.on('connected', startServer);
 }
 
-function startServer(){
+function startServer() {
     if (process.env.NODE_ENV !== 'test') {
         app.listen(PORT, function() {
             console.log(`Express server started on ${PORT}`);

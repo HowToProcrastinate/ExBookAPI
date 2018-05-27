@@ -10,14 +10,14 @@ router.route('/register')
             }else {
                 res.sendStatus(201);
             }
-          });
+        });
     });
 
 router.route('/profile')
     .get((req, res) => {
         let filter = {
             email: req.body.email
-        }
+        };
         let fields = {
             name: true,
             email: true,
@@ -26,7 +26,7 @@ router.route('/profile')
         User.findOne(filter)
             .select(fields)
             .exec((err, result) => {
-                if(err){
+                if(err) {
                     res.sendStatus(204);
                 }else{
                     res.json(result);
