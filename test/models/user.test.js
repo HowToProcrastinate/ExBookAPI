@@ -7,7 +7,7 @@ faker.locale = 'es_MX';
 
 describe('Model: User', () => {
     afterAll(done => {
-        User.remove({}, err => {
+        User.remove({}, () => {
             done();
         });
     });
@@ -15,7 +15,7 @@ describe('Model: User', () => {
         name: faker.name.findName(),
         email: faker.internet.email(),
         password: faker.internet.password()
-    }
+    };
     it('should register users', done => {
         request(app)
             .post('/register')
@@ -30,7 +30,7 @@ describe('Model: User', () => {
             name: faker.name.findName(),
             email: user_global.email,
             password: faker.internet.password()
-        }
+        };
         request(app)
             .post('/register')
             .send(user)
@@ -44,7 +44,7 @@ describe('Model: User', () => {
             let user = {
                 email: faker.internet.email(),
                 password: faker.internet.password()
-            }
+            };
             request(app)
                 .post('/register')
                 .send(user)
@@ -57,7 +57,7 @@ describe('Model: User', () => {
             let user = {
                 name: faker.name.findName(),
                 password: faker.internet.password()
-            }
+            };
             request(app)
                 .post('/register')
                 .send(user)
@@ -70,7 +70,7 @@ describe('Model: User', () => {
             let user = {
                 name: faker.name.findName(),
                 email: faker.internet.email()
-            }
+            };
             request(app)
                 .post('/register')
                 .send(user)
@@ -83,7 +83,7 @@ describe('Model: User', () => {
     it('should retrieve all user information by email', done => {
         let user_identnifier = {
             email: user_global.email
-        }
+        };
         request(app)
             .get('/profile')
             .send(user_identnifier)
@@ -103,7 +103,7 @@ describe('Model: User', () => {
             name,
             email: user_global.email,
             password
-        }
+        };
         request(app)
             .patch('/profile')
             .send(user_new_attributes)

@@ -2,7 +2,7 @@
     "env": {
         "es6": true,
         "node": true,
-        "mocha": true
+        "jest": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -37,11 +37,6 @@
         "space-before-blocks":[
             "error",
             "always"
-        ],
-        "no-unused-vars": [
-            "error", {
-              "varsIgnorePattern": "should|expect"
-            }
         ]
     }
 }
