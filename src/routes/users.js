@@ -23,15 +23,25 @@ router.route('/profile')
             email: true,
             password: true
         };
-        User.find(filter)
+        User.findOne(filter)
             .select(fields)
             .exec((err, result) => {
                 if(err){
                     res.sendStatus(204);
                 }else{
-                    res.json(result[0]);
+                    res.json(result);
                 }
             });
+    })
+    .patch((req, res) => {
+        let params = req.body;
+        User.findOneAndUpdate({ email: params.email }, params, { new: true },(err, result) => {
+            if (err || result.nModified === 0) {
+                res.sendStatus(204);
+            }else {
+                res.json(result);
+            }
+        });
     });
 
 module.exports = router;

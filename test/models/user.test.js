@@ -11,7 +11,6 @@ describe('Model: User', () => {
             done();
         });
     });
-    // Build
     let user_global = {
         name: faker.name.findName(),
         email: faker.internet.email(),
@@ -81,7 +80,6 @@ describe('Model: User', () => {
                 });
         });
     });
-    // Test use cases
     it('should retrieve all user information by email', done => {
         let user_identnifier = {
             email: user_global.email
@@ -91,7 +89,6 @@ describe('Model: User', () => {
             .send(user_identnifier)
             .end((err, res) => {
                 let body = res.body;
-                console.log(body);
                 expect(res.status).toBe(200);
                 expect(body.name).toBe(user_global.name);
                 expect(body.email).toBe(user_global.email);
@@ -99,15 +96,24 @@ describe('Model: User', () => {
                 done();
             });
     });
+    it('should update user attributes', done => {
+        let name = faker.name.findName();
+        let password = faker.internet.password();
+        let user_new_attributes = {
+            name,
+            email: user_global.email,
+            password
+        }
+        request(app)
+            .patch('/profile')
+            .send(user_new_attributes)
+            .end((err, res) => {
+                let body = res.body;
+                expect(res.status).toBe(200);
+                expect(body.name).toBe(name);
+                expect(body.password).toBe(password);
+                expect(body.email).toBe(user_global.email);
+                done();
+            });
+    });
 });
-
-
-
-
-
-// Build
-// Test use cases
-// Cover altern flows
-
-
-// http://www.albertgao.xyz/2017/05/24/how-to-test-expressjs-with-jest-and-supertest/
