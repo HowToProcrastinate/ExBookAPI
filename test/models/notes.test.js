@@ -11,6 +11,7 @@ describe('Model: Note', () => {
         email: faker.internet.email(),
         password: faker.internet.password()
     };
+    let note_global = '';
     beforeAll(done => {
         let user = new User(user_global);
         user.save(() => {
@@ -51,12 +52,73 @@ describe('Model: Note', () => {
             .send(payload)
             .end((err, res) => {
                 expect(res.status).toBe(201);
+                expect(res.body.id).toBeTruthy();
             });
+        payload.note.title = 'Título 2';
         request(app)
             .post('/notes')
             .send(payload)
             .end((err, res) => {
                 expect(res.status).toBe(201);
+                expect(res.body.id).toBeTruthy();
+                note_global = {
+                    '_id': res.body.id,
+                    'title': payload.note.title,
+                    'body': payload.note.body
+                };
+                done();
+            });
+    });
+    it('should get all notes from une user', done => {
+        let expected = [
+            {
+                'title': 'Título',
+                'body': 'Contenido'
+            },{
+                'title': 'Título',
+                'body': 'Contenido'
+            }
+        ];
+        request(app)
+            .get('/notes')
+            .send({
+                'email': user_global.email
+            })
+            .end((err, res) => {
+                let body = res.body;
+                let cBody = body.map(note => {
+                    return {
+                        'title': note.title,
+                        'body': note.body
+                    };
+                });
+                expect(res.status).toBe(200);
+                expect(cBody).toEqual(expect.arrayContaining(expected));
+                done();
+            });
+    });
+    it('should get one note by id', done => {
+        request(app)
+            .get(`/notes/${note_global._id}`)
+            .send({
+                'email': user_global.email
+            })
+            .end((err, res) => {
+                let body = res.body;
+                expect(res.status).toBe(200);
+                expect(body).toEqual(expect.objectContaining(note_global));
+                done();
+            });
+    });
+    it('should give error response on not found note', done => {
+        let id = note_global._id.split('').sort().join('');
+        request(app)
+            .get(`/notes/${id}`)
+            .send({
+                'email': user_global.email
+            })
+            .end((err, res) => {
+                expect(res.status).toBe(400);
                 done();
             });
     });
