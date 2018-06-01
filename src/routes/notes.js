@@ -1,23 +1,26 @@
 const router = require('express').Router();
-const Note = require('../models/note');
+const User = require('../models/users');
 
 router.route('/')
     .post((req, res) => {
-        Note.add(res, req.body);
-    })
-    .get((req, res) => {
-        Note.list(res);
-    });
-
-router.route('/:id')
-    .get((req, res) => {
-        Note.get(res, req.params.id);
-    })
-    .patch((req, res) => {
-        Note.patch(res, req.params.id, req.body);
-    })
-    .delete((req, res) => {
-        Note.remove(res, req.params.id);
+        let filter = {
+            email: req.body.email
+        };
+        User.findOne(filter)
+            .exec((err, user) => {
+                if(err) {
+                    res.sendStatus(400);
+                }else{
+                    user.notes.push(req.body.note);
+                    user.save(error => {
+                        if(error) {
+                            res.sendStatus(400);
+                        }else{
+                            res.sendStatus(201);
+                        }
+                    });
+                }
+            });
     });
 
 module.exports = router;
