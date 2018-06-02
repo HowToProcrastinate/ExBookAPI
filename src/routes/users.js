@@ -1,5 +1,9 @@
 const router = require('express').Router();
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const User = require('../models/users');
+
+require('dotenv').config();
 
 router.route('/register')
     .post((req, res) => {
@@ -13,29 +17,53 @@ router.route('/register')
         });
     });
 
-router.route('/profile')
+router.route('/login')
     .get((req, res) => {
-        let filter = {
-            email: req.body.email
-        };
-        let fields = {
-            name: true,
-            email: true,
-            password: true
-        };
-        User.findOne(filter)
-            .select(fields)
-            .exec((err, result) => {
-                if(err) {
-                    res.sendStatus(204);
-                }else{
-                    res.json(result);
-                }
-            });
+        const email = req.body.email;
+        const password = req.body.password;
+
+        if (email && password) {
+            let filter = {
+                email: req.body.email
+            };
+            let fields = {
+                email: true,
+                password: true
+            };
+            User.findOne(filter)
+                .select(fields)
+                .exec((err, user) => {
+                    if(err) {
+                        res.sendStatus(204);
+                    }else{
+                        if (user.password === password) {
+                            let payload = {
+                                email: user.email
+                            };
+                            res.json({
+                                token: jwt.sign(payload, process.env.JWT_SECRET)
+                            });
+                        } else {
+                            res.sendStatus(401);
+                        }
+                    }
+                });
+        } else {
+            res.sendStatus(401);
+        }
+    });
+
+router.route('/profile')
+    .all(passport.authenticate('jwt', { session: false }))
+    .get((req, res) => {
+        if(req.user) {
+            res.json(req.user);
+        }else{
+            res.sendStatus(204);
+        }
     })
     .patch((req, res) => {
-        let params = req.body;
-        User.findOneAndUpdate({ email: params.email }, params, { new: true },(err, result) => {
+        User.findOneAndUpdate({ email: req.user.email }, req.body, { new: true },(err, result) => {
             if (err || result.nModified === 0) {
                 res.sendStatus(204);
             }else {
