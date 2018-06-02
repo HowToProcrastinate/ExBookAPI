@@ -15,7 +15,16 @@ describe('Model: Note', () => {
     beforeAll(done => {
         let user = new User(user_global);
         user.save(() => {
-            done();
+            request(app)
+                .get('/login')
+                .send({
+                    'email': user_global.email,
+                    'password': user_global.password
+                })
+                .end((err, res) => {
+                    user_global.token = 'bearer ' + res.body.token;
+                    done();
+                });
         });
     });
     afterAll(done => {
@@ -34,6 +43,7 @@ describe('Model: Note', () => {
         request(app)
             .post('/notes')
             .send(payload)
+            .set('Authorization', user_global.token)
             .end((err, res) => {
                 expect(res.status).toBe(400);
                 done();
@@ -41,30 +51,29 @@ describe('Model: Note', () => {
     });
     it('should append notes to one user', done => {
         let payload = {
-            'email': user_global.email,
-            'note': {
-                'title': 'Título',
-                'body': 'Contenido'
-            }
+            'title': 'Título',
+            'body': 'Contenido'
         };
         request(app)
             .post('/notes')
             .send(payload)
+            .set('Authorization', user_global.token)
             .end((err, res) => {
                 expect(res.status).toBe(201);
                 expect(res.body.id).toBeTruthy();
             });
-        payload.note.title = 'Título 2';
+        payload.title = 'Título 2';
         request(app)
             .post('/notes')
             .send(payload)
+            .set('Authorization', user_global.token)
             .end((err, res) => {
                 expect(res.status).toBe(201);
                 expect(res.body.id).toBeTruthy();
                 note_global = {
                     '_id': res.body.id,
-                    'title': payload.note.title,
-                    'body': payload.note.body
+                    'title': payload.title,
+                    'body': payload.body
                 };
                 done();
             });
@@ -81,9 +90,7 @@ describe('Model: Note', () => {
         ];
         request(app)
             .get('/notes')
-            .send({
-                'email': user_global.email
-            })
+            .set('Authorization', user_global.token)
             .end((err, res) => {
                 let body = res.body;
                 let cBody = body.map(note => {
@@ -100,9 +107,7 @@ describe('Model: Note', () => {
     it('should get one note by id', done => {
         request(app)
             .get(`/notes/${note_global._id}`)
-            .send({
-                'email': user_global.email
-            })
+            .set('Authorization', user_global.token)
             .end((err, res) => {
                 let body = res.body;
                 expect(res.status).toBe(200);
@@ -114,9 +119,7 @@ describe('Model: Note', () => {
         let id = note_global._id.split('').sort().join('');
         request(app)
             .get(`/notes/${id}`)
-            .send({
-                'email': user_global.email
-            })
+            .set('Authorization', user_global.token)
             .end((err, res) => {
                 expect(res.status).toBe(400);
                 done();

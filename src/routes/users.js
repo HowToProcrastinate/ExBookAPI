@@ -63,13 +63,17 @@ router.route('/profile')
         }
     })
     .patch((req, res) => {
-        User.findOneAndUpdate({ email: req.user.email }, req.body, { new: true },(err, result) => {
-            if (err || result.nModified === 0) {
-                res.sendStatus(204);
-            }else {
-                res.json(result);
-            }
-        });
+        User.findOneAndUpdate(
+            { _id: req.user._id }, 
+            req.body, 
+            { new: true },
+            (err, result) => {
+                if (err || result.nModified === 0) {
+                    res.sendStatus(204);
+                }else {
+                    res.json(result);
+                }
+            });
     });
 
 module.exports = router;
