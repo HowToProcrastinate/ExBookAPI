@@ -77,7 +77,7 @@ describe('Model: User', () => {
     });
     it('should get token from login', done => {
         request(app)
-            .get('/login')
+            .post('/login')
             .send({
                 'email': user_global.email,
                 'password': user_global.password

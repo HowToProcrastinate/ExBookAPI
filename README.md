@@ -20,9 +20,9 @@ user {
 ---
 ## Rutas
 - `/register` :
-    - `POST`: Crear un usuario
+    - `POST`: Recibe `name, email, password` y rear un usuario
 - `/login` :
-    - `GET`: Devuelve el token para la autenticación
+    - `POST`: Recibe `email, password` y devuelve el token para la autenticación
 
 ## Estas rutas necesitan el token de autenticación
 Para enviar el toquen a las siguientes rutas se edebe agregar el header `Authorization` y su valor debe ser `bearer TOKEN`, donde `TOKEN` es el obtenido en la ruta `/login`.
