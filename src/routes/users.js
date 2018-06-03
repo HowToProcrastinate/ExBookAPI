@@ -57,21 +57,39 @@ router.route('/profile')
     .all(passport.authenticate('jwt', { session: false }))
     .get((req, res) => {
         if(req.user) {
-            res.json(req.user);
+            let r = {
+                'name': req.user.name,
+                'email': req.user.email
+            };
+            res.json(r);
         }else{
             res.sendStatus(204);
         }
     })
     .patch((req, res) => {
+        let valid_attr = {};
+        if(req.body.name) {
+            valid_attr.name = req.body.name;
+        }
+        if(req.body.email) {
+            valid_attr.email = req.body.email;
+        }
+        if(req.body.password) {
+            valid_attr.password = req.body.password;
+        }
         User.findOneAndUpdate(
             { _id: req.user._id }, 
-            req.body, 
+            valid_attr, 
             { new: true },
             (err, result) => {
                 if (err || result.nModified === 0) {
                     res.sendStatus(204);
                 }else {
-                    res.json(result);
+                    let r = {
+                        'name': result.name,
+                        'email': result.email
+                    };
+                    res.json(r);
                 }
             });
     });

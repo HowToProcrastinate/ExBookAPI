@@ -1,16 +1,10 @@
 const request = require('supertest');
 const faker = require('faker');
 const app = require('../../src/index');
-const User = require('../../src/models/users');
 
 faker.locale = 'es_MX';
 
-describe.only('Model: User', () => {
-    afterAll(done => {
-        User.remove({}, () => {
-            done();
-        });
-    });
+describe('Model: User', () => {
     let user_global = {
         name: faker.name.findName(),
         email: faker.internet.email(),
@@ -104,7 +98,7 @@ describe.only('Model: User', () => {
                 expect(res.status).toBe(200);
                 expect(body.name).toBe(user_global.name);
                 expect(body.email).toBe(user_global.email);
-                expect(body.password).toBe(user_global.password);
+                expect(body.password).toBeFalsy();
                 done();
             });
     });
@@ -125,7 +119,7 @@ describe.only('Model: User', () => {
                 let body = res.body;
                 expect(res.status).toBe(200);
                 expect(body.name).toBe(name);
-                expect(body.password).toBe(password);
+                expect(body.password).toBeFalsy();
                 expect(body.email).toBe(email);
                 done();
             });
