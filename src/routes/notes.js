@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
+const mongoose = require('mongoose');
 const User = require('../models/users');
 
 router.route('/')
@@ -52,6 +53,50 @@ router.route('/:id')
                     if (err) {
                         res.sendStatus(400);
                     } else {
+                        let notes = user.notes;
+                        let note = notes.find(n => { 
+                            return n._id.toString() === req.params.id;
+                        });
+                        if(note) {
+                            res.json(note);
+                        }else {
+                            res.sendStatus(400);
+                        }
+                    }
+                });
+        }else {
+            res.sendStatus(403);
+        }
+    })
+    .patch((req, res) => {
+        if(req.user) {
+            let id;
+            try {
+                id = mongoose.Types.ObjectId(req.params.id);
+            } catch (error) {
+                res.sendStatus(400);
+            }
+            /**
+             * Reference:
+             * https://docs.mongodb.com/manual/reference/operator/update/positional/
+             */
+            User.findOneAndUpdate(
+                { 
+                    _id: req.user._id,
+                    'notes._id': id
+                },
+                {
+                    $set: {
+                        'notes.$.title': req.body.title,
+                        'notes.$.body': req.body.body
+                    }
+                },{
+                    new: true
+                })
+                .exec((err, user) => {
+                    if(err || !user) {
+                        res.sendStatus(400);
+                    }else{
                         let notes = user.notes;
                         let note = notes.find(n => { 
                             return n._id.toString() === req.params.id;

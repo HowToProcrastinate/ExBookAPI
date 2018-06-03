@@ -34,11 +34,8 @@ describe('Model: Note', () => {
     });
     it('shouldn\'t create notes without attributes', done => {
         let payload = {
-            'email': user_global.email,
-            'note': {
-                'title': '',
-                'body': ''
-            }
+            'title': '',
+            'body': ''
         };
         request(app)
             .post('/notes')
@@ -119,6 +116,38 @@ describe('Model: Note', () => {
         let id = note_global._id.split('').sort().join('');
         request(app)
             .get(`/notes/${id}`)
+            .set('Authorization', user_global.token)
+            .end((err, res) => {
+                expect(res.status).toBe(400);
+                done();
+            });
+    });
+    it('should edit one note', done => {
+        let updAttr = {
+            'title': 'new title',
+            'body': 'new body'
+        };
+        request(app)
+            .patch(`/notes/${note_global._id}`)
+            .send(updAttr)
+            .set('Authorization', user_global.token)
+            .end((err, res) => {
+                expect(res.status).toBe(200);
+                let body = res.body;
+                expect(body.title).toBe(updAttr.title);
+                expect(body.body).toBe(updAttr.body);
+                done();
+            });
+    });
+    it('should throw error when trying edit note that does not exists', done => {
+        let updAttr = {
+            'title': 'new title 3',
+            'body': 'new body 3'
+        };
+        let wrongID = '5b142f34ab711c5889d58b7e';
+        request(app)
+            .patch(`/notes/${wrongID}`)
+            .send(updAttr)
             .set('Authorization', user_global.token)
             .end((err, res) => {
                 expect(res.status).toBe(400);
