@@ -27,11 +27,6 @@ describe('Model: Note', () => {
                 });
         });
     });
-    afterAll(done => {
-        User.remove({}, () => {
-            done();
-        });
-    });
     it('shouldn\'t create notes without attributes', done => {
         let payload = {
             'title': '',
