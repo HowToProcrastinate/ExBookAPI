@@ -111,6 +111,47 @@ router.route('/:id')
         }else {
             res.sendStatus(403);
         }
+    })
+    .delete((req, res) => {
+        if(req.user) {
+            let id;
+            try {
+                id = mongoose.Types.ObjectId(req.params.id);
+            } catch (error) {
+                res.sendStatus(400);
+            }
+            User.findOneAndUpdate(
+                { 
+                    _id: req.user._id,
+                    'notes._id': id
+                },
+                {
+                    $pull: {
+                        notes: {
+                            _id: id,
+                        }
+                    }
+                },{
+                    new: true
+                })
+                .exec((err, user) => {
+                    if(err || !user) {
+                        res.sendStatus(400);
+                    }else{
+                        let notes = user.notes;
+                        let note = notes.find(n => { 
+                            return n._id.toString() === req.params.id;
+                        });
+                        if(!note) {
+                            res.sendStatus(200);
+                        }else {
+                            res.sendStatus(400);
+                        }
+                    }
+                });
+        }else {
+            res.sendStatus(403);
+        }
     });
 
 module.exports = router;

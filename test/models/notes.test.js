@@ -154,4 +154,23 @@ describe('Model: Note', () => {
                 done();
             });
     });
+    it('should remove one note', done => {
+        request(app)
+            .delete(`/notes/${note_global._id}`)
+            .set('Authorization', user_global.token)
+            .end((err, res) => {
+                expect(res.status).toBe(200);
+                done();
+            });
+    });
+    it('should throw error when trying remove note that does not exists', done => {
+        let wrongID = '5b142f34ab711c5889d58b7e';
+        request(app)
+            .patch(`/notes/${wrongID}`)
+            .set('Authorization', user_global.token)
+            .end((err, res) => {
+                expect(res.status).toBe(400);
+                done();
+            });
+    });
 });
