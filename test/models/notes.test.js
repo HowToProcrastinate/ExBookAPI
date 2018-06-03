@@ -16,7 +16,7 @@ describe('Model: Note', () => {
         let user = new User(user_global);
         user.save(() => {
             request(app)
-                .get('/login')
+                .post('/login')
                 .send({
                     'email': user_global.email,
                     'password': user_global.password
