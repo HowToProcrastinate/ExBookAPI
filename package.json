@@ -37,9 +37,9 @@
     "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
+    "eslint": "^5.15.2",
     "faker": "^4.1.0",
-    "jest": "^23.0.0",
+    "jest": "^24.5.0",
     "nodemon": "^1.17.3",
     "supertest": "^3.1.0"
   }
